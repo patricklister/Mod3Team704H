@@ -70,15 +70,26 @@ class LocationHeading:
 
 
 class Rover:
-    __init__(self, destCor, locationHeadingObj):
-        self.currCor = locaionHeadingObj.x
-        self.destCor = destCor
-        self.tempDestCor = tempDestCor
+    def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
+        self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
+        self.currAngle = locationHeadingObj.heading
+        self.destCoor = destCor
+        self.tempDestCoor = [0,0]
+
         self.locationHeadingObj = locationHeadingObj
+        self.wheelControlObj = wheelControlObj
 
 
-    def go_straight (self, coordinate):
-        print(self.locationHeadingObj.x)
+    def go_straight (self, distance, forOrBack):
+        initCoor = [self.currCoor[0], self.currCoor[1]]
+
+        if forOrBack == "f":
+            wheelControlObj.drivewheels(1,1)
+        elif forOrBack == "r":
+            wheelC
+
+
+        
         
 
 
@@ -87,8 +98,7 @@ locHead  = LocationHeading()
 laser = LaserListener()
 wheel = WheelController()
 
-rover = ([0,0], locHead)
-rover.go_straight([0,0])
+rover = ([0,0], locHead, wheel)
 #end of initialization
 
 
@@ -96,6 +106,8 @@ rover.go_straight([0,0])
 # start of control loop snippet
 
 while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL+C is pressed in the ubuntu window that is running this code
+    rover.go_straight([0,0])
+    
     minRange = 99 #initialize minRange to a value larger than what will be recieved
     for x in range(0, 15): #iterate through the ranges list
         if laser.laserRanges[x] < minRange: #if the current range is smaller than the smallest know range
