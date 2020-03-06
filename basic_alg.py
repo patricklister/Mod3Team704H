@@ -22,14 +22,11 @@ class WheelController:
         msg.wheelMode = 0
         self.wheel_pub.publish(msg)
         #print(msg)
-
-
 # end of wheel control code
+
 
 # start of laser scan code
 from sensor_msgs.msg import LaserScan
-
-# Add comment
 
 class LaserListener:
 
@@ -41,8 +38,8 @@ class LaserListener:
         # type: (LaserScan) -> None
         self.laserRanges = msg.ranges
 
-
 # end of laser scan code access laserRanges for an array of all measured distances from the laser sensors
+
 
 # start of localization stuff
 from geometry_msgs.msg import Point
@@ -69,15 +66,32 @@ class LocationHeading:
         # type: (Float32) -> None
         self.heading = msg.data
 
-
 # end of localization stuff
+
+
+class Rover:
+    __init__(self, destCor, locationHeadingObj):
+        self.currCor = locaionHeadingObj.x
+        self.destCor = destCor
+        self.tempDestCor = tempDestCor
+        self.locationHeadingObj = locationHeadingObj
+
+
+    def go_straight (self, coordinate):
+        print(self.locationHeadingObj.x)
+        
 
 
 #initiallize classes to get and send data to gazebo
 locHead  = LocationHeading()
 laser = LaserListener()
 wheel = WheelController()
+
+rover = ([0,0], locHead)
+rover.go_straight([0,0])
 #end of initialization
+
+
 
 # start of control loop snippet
 
