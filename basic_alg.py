@@ -70,12 +70,19 @@ class LocationHeading:
 
 
 class Rover:
+<<<<<<< HEAD
     def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
         self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
         self.currAngle = locationHeadingObj.heading
         self.destCoor = destCoor
         self.tempDestCoor = [0,0]
 
+=======
+    def __init__(self, destCor, locationHeadingObj):
+        self.currCor = locaionHeadingObj.x
+        self.destCor = destCor
+        self.tempDestCor = tempDestCor
+>>>>>>> ca869d49b8d1592a1c65ca5bb472bfa02e71421b
         self.locationHeadingObj = locationHeadingObj
         self.wheelControlObj = wheelControlObj
 
