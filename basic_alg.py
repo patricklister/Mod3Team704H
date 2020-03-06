@@ -80,6 +80,8 @@ class Rover:
         self.locationHeadingObj = locationHeadingObj
         self.wheelControlObj = wheelControlObj
 
+        self.turnErrorThreshhold = 0.1
+
 
     def go_straight (self, distance, forOrBack):
         initCoor = [self.currCoor[0], self.currCoor[1]]
@@ -95,6 +97,9 @@ class Rover:
         vector = [magnitude * math.sin(heading), magnitude * math.cos(heading)]
         return vector
 
+    def rotate (self, desiredHeading):
+        currAngle = locationHeadingObj.heading
+        if (abs()):
 
         
         
