@@ -83,10 +83,19 @@ class Rover:
     def go_straight (self, distance, forOrBack):
         initCoor = [self.currCoor[0], self.currCoor[1]]
 
-        if forOrBack == "f":
-            wheelControlObj.drivewheels(1,1)
-        elif forOrBack == "r":
-            wheelC
+        distanceTravelled = 0
+
+        while distanceTravelled > distance:
+            if forOrBack == "f":
+                wheelControlObj.drive_wheels(1,1)
+            elif forOrBack == "b":
+                wheelControlObj.drive_wheels(-1,-1)
+
+            newCoor = [self.currCoor[0], self.currCoor[1]]
+            distanceTravelled = ( (newCoor[0]-initCoor[0])^2 + (newCoor[1]-initCoor[0])^2 )^(1/2)
+
+        wheelControlObj.drive_wheels(0,0)
+
 
 
         
@@ -107,6 +116,7 @@ rover = ([0,0], locHead, wheel)
 
 while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL+C is pressed in the ubuntu window that is running this code
     
+    rover.go_straight(10, "b")
     minRange = 99 #initialize minRange to a value larger than what will be recieved
     for x in range(0, 15): #iterate through the ranges list
         if laser.laserRanges[x] < minRange: #if the current range is smaller than the smallest know range
