@@ -73,7 +73,7 @@ class Rover:
     def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
         self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
         self.currAngle = locationHeadingObj.heading
-        self.destCoor = destCor
+        self.destCoor = destCoor
         self.tempDestCoor = [0,0]
 
         self.locationHeadingObj = locationHeadingObj
@@ -106,7 +106,7 @@ rover = ([0,0], locHead, wheel)
 # start of control loop snippet
 
 while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL+C is pressed in the ubuntu window that is running this code
-    rover.go_straight([0,0])
+    
     
     minRange = 99 #initialize minRange to a value larger than what will be recieved
     for x in range(0, 15): #iterate through the ranges list
