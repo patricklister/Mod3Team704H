@@ -80,7 +80,9 @@ class Rover:
         self.locationHeadingObj = locationHeadingObj
         self.wheelControlObj = wheelControlObj
 
-        self.turnErrorThreshhold = 0.1
+        turnErrorThreshhold = 0.1
+        turnIncrement = 1
+        lastTurnDirection = 0
 
 
     def go_straight (self, distance, forOrBack):
@@ -98,8 +100,27 @@ class Rover:
         return vector
 
     def rotate (self, desiredHeading):
-        currAngle = locationHeadingObj.heading
-        if (abs()):
+        # Get the rover's current heading
+        currentHeading = locationHeadingObj.heading
+
+        # If the current heading is in the desired direction within error, return True
+        if (abs(currentHeading - desiredHeading) <= self.turnErrorThreshhold):
+            turnIncrement = 1
+            lastTurnDirection = 0
+            return True
+        
+        # Get the current desired turn direction (>0 is left, <0 is right)
+        currentTurnDirection = (desiredHeading - currentHeading - math.pi)/abs(desiredHeading - currentHeading - math.pi)
+
+        # If turning a different direction than last time, halve the speed at which it turns
+        if currentTurnDirection != lastTurnDirection and lastTurnDirection != 0:
+            turnIncrement /= 2
+
+        wheelControlObj.drivewheels(-1 * currentTurnDirection * turnIncrement, currentTurnDirection * turnIncrement)
+
+        lastTurnDirection = currentTurnDirection
+
+        return False
 
         
         
