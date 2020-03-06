@@ -74,11 +74,16 @@ class Rover:
     def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
         self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
         self.currAngle = locationHeadingObj.heading
-        self.destCoor = destCor
+        self.destCoor = destCoor
         self.tempDestCoor = [0,0]
 
         self.locationHeadingObj = locationHeadingObj
         self.wheelControlObj = wheelControlObj
+
+
+    def updateCurrCoor(self):
+        self.locationHeadingObj.fix_callback()
+        self.currCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
 
 
     def go_straight (self, distance, forOrBack):
@@ -86,16 +91,21 @@ class Rover:
 
         distanceTravelled = 0
 
-        while distanceTravelled > distance:
+        while distanceTravelled <= distance:
             if forOrBack == "f":
-                wheelControlObj.drive_wheels(1,1)
+                self.wheelControlObj.drive_wheels(1,1)
             elif forOrBack == "b":
-                wheelControlObj.drive_wheels(-1,-1)
+                self.wheelControlObj.drive_wheels(-1,-1)
+
+            self.updateCurrCoor()
 
             newCoor = [self.currCoor[0], self.currCoor[1]]
-            distanceTravelled = ( (newCoor[0]-initCoor[0])^2 + (newCoor[1]-initCoor[0])^2 )^(1/2)
+            distanceTravelled = ( (newCoor[0]-initCoor[0])**2 + (newCoor[1]-initCoor[0])**2 )**(1/2)
 
-        wheelControlObj.drive_wheels(0,0)
+            print(str(initCoor) + "   " + str(newCoor))
+            print(str(distanceTravelled) + ">" + str(distance))
+
+        self.wheelControlObj.drive_wheels(0,0)
 
 
     # pass in a magnitude and heading to get the desired movement vector
@@ -114,7 +124,7 @@ locHead  = LocationHeading()
 laser = LaserListener()
 wheel = WheelController()
 
-rover = ([0,0], locHead, wheel)
+rover = Rover([0,0], locHead, wheel)
 #end of initialization
 
 
@@ -124,6 +134,9 @@ rover = ([0,0], locHead, wheel)
 while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL+C is pressed in the ubuntu window that is running this code
     
     rover.go_straight(10, "b")
+    print("Current Heading: ", locHead.heading, "Current x val: ", locHead.x, "RightMostLaser: ", laser.laserRanges[0]) #print some random data to the command line
+    
+    """
     minRange = 99 #initialize minRange to a value larger than what will be recieved
     for x in range(0, 15): #iterate through the ranges list
         if laser.laserRanges[x] < minRange: #if the current range is smaller than the smallest know range
@@ -133,6 +146,7 @@ while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL
     else:
         wheel.drive_wheels(1, 1) #go staright
     print("Current Heading: ", locHead.heading, "Current x val: ", locHead.x, "RightMostLaser: ", laser.laserRanges[0]) #print some random data to the command line
+    """
 
 # end of control loop snippet
 
