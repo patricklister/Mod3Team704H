@@ -70,7 +70,7 @@ class LocationHeading:
 
 
 class Rover:
-    __init__(self, destCor, locationHeadingObj):
+    def __init__(self, destCor, locationHeadingObj):
         self.currCor = locaionHeadingObj.x
         self.destCor = destCor
         self.tempDestCor = tempDestCor
