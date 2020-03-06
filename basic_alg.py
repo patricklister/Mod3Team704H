@@ -70,19 +70,12 @@ class LocationHeading:
 
 
 class Rover:
-<<<<<<< HEAD
     def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
         self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
         self.currAngle = locationHeadingObj.heading
-        self.destCoor = destCoor
+        self.destCoor = destCor
         self.tempDestCoor = [0,0]
 
-=======
-    def __init__(self, destCor, locationHeadingObj):
-        self.currCor = locaionHeadingObj.x
-        self.destCor = destCor
-        self.tempDestCor = tempDestCor
->>>>>>> ca869d49b8d1592a1c65ca5bb472bfa02e71421b
         self.locationHeadingObj = locationHeadingObj
         self.wheelControlObj = wheelControlObj
 
@@ -114,7 +107,6 @@ rover = ([0,0], locHead, wheel)
 
 while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL+C is pressed in the ubuntu window that is running this code
     
-    
     minRange = 99 #initialize minRange to a value larger than what will be recieved
     for x in range(0, 15): #iterate through the ranges list
         if laser.laserRanges[x] < minRange: #if the current range is smaller than the smallest know range
@@ -126,3 +118,4 @@ while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL
     print("Current Heading: ", locHead.heading, "Current x val: ", locHead.x, "RightMostLaser: ", laser.laserRanges[0]) #print some random data to the command line
 
 # end of control loop snippet
+
