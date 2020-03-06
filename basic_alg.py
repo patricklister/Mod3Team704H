@@ -2,6 +2,7 @@
 
 
 import rospy  # this is the module required for all simulation communication
+import math
 
 # start of wheel control code
 from wheel_control.msg import wheelSpeed  # this is a required module for the drive communication
@@ -96,6 +97,12 @@ class Rover:
 
         wheelControlObj.drive_wheels(0,0)
 
+
+    # pass in a magnitude and heading to get the desired movement vector
+    # Add this vector to the current coordinates to get the desired coordinates
+    def get_desired_vector (self, magnitude, heading):
+        vector = [magnitude * math.sin(heading), magnitude * math.cos(heading)]
+        return vector
 
 
         
