@@ -72,6 +72,10 @@ class LocationHeading:
 
 class Rover:
     def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
+        self.fixSub = rospy.Subscriber("/fix/metres", Point, self.fix_callback, queue_size=1)
+        self.headingSub = rospy.Subscriber("/heading",Float32, self.heading_callback, queue_size=1)
+        
+        
         self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
         self.currAngle = locationHeadingObj.heading
         self.destCoor = destCoor
