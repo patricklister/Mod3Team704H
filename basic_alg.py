@@ -3,9 +3,11 @@
 
 import rospy  # this is the module required for all simulation communication
 import math
+import time
 
 # start of wheel control code
 from wheel_control.msg import wheelSpeed  # this is a required module for the drive communication
+
 
 rospy.init_node("controller")
 
@@ -69,15 +71,10 @@ class LocationHeading:
 
 # end of localization stuff
 
-
 class Rover:
     def __init__(self, destCoor, locationHeadingObj, wheelControlObj):
-        self.fixSub = rospy.Subscriber("/fix/metres", Point, self.fix_callback, queue_size=1)
-        self.headingSub = rospy.Subscriber("/heading",Float32, self.heading_callback, queue_size=1)
-        
-        
-        self.currCoor = [locationHeadingObj.x, locationHeadingObj.y]
-        self.currAngle = locationHeadingObj.heading
+
+
         self.destCoor = destCoor
         self.tempDestCoor = [0,0]
 
@@ -89,31 +86,45 @@ class Rover:
         lastTurnDirection = 0
 
 
-    def updateCurrCoor(self):
-        self.locationHeadingObj.fix_callback()
-        self.currCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
-
-
     def go_straight (self, distance, forOrBack):
-        initCoor = [self.currCoor[0], self.currCoor[1]]
+        initCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
 
         distanceTravelled = 0
 
+        speed = 0.25
+        
         while distanceTravelled <= distance:
             if forOrBack == "f":
-                self.wheelControlObj.drive_wheels(1,1)
+                velocity = speed
             elif forOrBack == "b":
-                self.wheelControlObj.drive_wheels(-1,-1)
+                velocity = (-1)*speed
 
-            self.updateCurrCoor()
+            self.wheelControlObj.drive_wheels(velocity, velocity)
 
-            newCoor = [self.currCoor[0], self.currCoor[1]]
-            distanceTravelled = ( (newCoor[0]-initCoor[0])**2 + (newCoor[1]-initCoor[0])**2 )**(1/2)
+            newCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
+            distanceTravelled = ((newCoor[0]-initCoor[0])**2 + (newCoor[1]-initCoor[1])**2)**(0.5)
 
             print(str(initCoor) + "   " + str(newCoor))
             print(str(distanceTravelled) + ">" + str(distance))
 
+            if distanceTravelled >= 0.98*distance:
+                speed = 0.001
+            elif distanceTravelled >= 0.95*distance:
+                speed = 0.025
+            elif distanceTravelled >= 0.90*distance:
+                speed = 0.05
+            elif distanceTravelled >= 0.80*distance:
+                speed = 0.1
+            
+
         self.wheelControlObj.drive_wheels(0,0)
+
+        time.sleep(5)
+
+        newCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
+        distanceTravelled = ((newCoor[0]-initCoor[0])**2 + (newCoor[1]-initCoor[1])**2)**(0.5)
+
+        print(distanceTravelled)
 
 
     # pass in a magnitude and heading to get the desired movement vector
@@ -154,18 +165,20 @@ locHead  = LocationHeading()
 laser = LaserListener()
 wheel = WheelController()
 
-rover = Rover([0,0], locHead, wheel)
+roverObj = Rover([0,0], locHead, wheel)
 #end of initialization
-
 
 
 # start of control loop snippet
 
 while not rospy.is_shutdown():  #this will run until gazebo is shut down or CTRL+C is pressed in the ubuntu window that is running this code
+    time.sleep(5)
+
+    roverObj.go_straight(10, "b")
+
     
-    rover.go_straight(10, "b")
-    print("Current Heading: ", locHead.heading, "Current x val: ", locHead.x, "RightMostLaser: ", laser.laserRanges[0]) #print some random data to the command line
-    
+    break
+
     """
     minRange = 99 #initialize minRange to a value larger than what will be recieved
     for x in range(0, 15): #iterate through the ranges list
