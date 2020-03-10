@@ -1,10 +1,10 @@
 #start of code snippets
 
-
 import rospy  # this is the module required for all simulation communication
 import math
 import time
 import datetime
+
 
 # start of wheel control code
 from wheel_control.msg import wheelSpeed  # this is a required module for the drive communication
@@ -127,11 +127,23 @@ class Rover:
         print(self.locationHeadingObj.heading)
         print(str(minAngle) + " - " + str(maxAngle))
 
+        diff = angle - self.locationHeadingObj.heading
+        if diff <= math.pi:
+            lw = -0.6
+            rw = 0.6
+        elif diff > math.pi:
+            lw = 0.6
+            rw = -0.6
+
+        
         while self.locationHeadingObj.heading > maxAngle or self.locationHeadingObj.heading < minAngle:
-            print("HEY!")
-            self.wheelControlObj.drive_wheels(-0.5, 0.5)
+            self.wheelControlObj.drive_wheels(lw, rw)
+
+            """
             print(self.locationHeadingObj.heading)
             print(str(minAngle) + " - " + str(maxAngle))
+            """
+
 
 
 
@@ -178,8 +190,8 @@ class Rover:
     def rotate(self, desiredAngle):
         if desiredAngle < 90:
             desiredHeading = self.locationHeadingObj.heading - (desiredAngle*((math.pi)/180))
-            rw = 0.5
-            lw = -0.5
+            lw = 0.5
+            rw = -0.5
 
         elif desiredAngle == 90:
             desiredHeading = self.locationHeadingObj.heading
@@ -187,8 +199,8 @@ class Rover:
 
         elif desiredAngle > 90:
             desiredHeading = self.locationHeadingObj.heading + ((desiredAngle-90)*((math.pi)/180))
-            rw = -0.5
-            lw = 0.5
+            lw = -0.5
+            rw = 0.5
 
         print(self.locationHeadingObj.heading)
         maxHeading = desiredHeading + self.turnErrorThreshhold
@@ -198,7 +210,7 @@ class Rover:
         print(str(minHeading) + " - " + str(maxHeading))             
         
         while self.locationHeadingObj.heading < minHeading or self.locationHeadingObj.heading > maxHeading:
-            self.wheelControlObj.drive_wheels(rw, lw)
+            self.wheelControlObj.drive_wheels(lw, rw)
 
         print("***")
         print(self.locationHeadingObj.heading)
