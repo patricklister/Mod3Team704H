@@ -197,7 +197,7 @@ class Rover:
         print(desiredHeading)
         print(str(minHeading) + " - " + str(maxHeading))             
         
-        while self.locationHeadingObj.heading < minHeading or self.locationHeadingObj.heading > maxHeading:
+        while (self.locationHeadingObj.heading < minHeading or self.locationHeadingObj.heading > maxHeading) and not rospy.is_shutdown():
             self.wheelControlObj.drive_wheels(rw, lw)
 
         print("***")
