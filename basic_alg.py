@@ -142,7 +142,7 @@ class Rover:
 
         speed = 0.25
 
-        while distanceTravelled <= distance:
+        while distanceTravelled <= distance and not rospy.is_shutdown():
 
             if forOrBack == "f":
                 velocity = speed
