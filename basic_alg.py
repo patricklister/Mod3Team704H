@@ -154,7 +154,7 @@ class Rover:
 
         speed = 0.25
 
-        while distanceTravelled <= distance:
+        while distanceTravelled <= distance and not rospy.is_shutdown():
 
             if forOrBack == "f":
                 velocity = speed
@@ -209,8 +209,13 @@ class Rover:
         print(desiredHeading)
         print(str(minHeading) + " - " + str(maxHeading))             
         
+<<<<<<< HEAD
         while self.locationHeadingObj.heading < minHeading or self.locationHeadingObj.heading > maxHeading:
             self.wheelControlObj.drive_wheels(lw, rw)
+=======
+        while (self.locationHeadingObj.heading < minHeading or self.locationHeadingObj.heading > maxHeading) and not rospy.is_shutdown():
+            self.wheelControlObj.drive_wheels(rw, lw)
+>>>>>>> 76372920943bb3898c9dc306369942069578c21a
 
         print("***")
         print(self.locationHeadingObj.heading)
