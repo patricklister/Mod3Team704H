@@ -136,7 +136,7 @@ class Rover:
             rw = -0.6
 
         
-        while self.locationHeadingObj.heading > maxAngle or self.locationHeadingObj.heading < minAngle:
+        while (self.locationHeadingObj.heading > maxAngle or self.locationHeadingObj.heading < minAngle) and not rospy.is_shutdown():
             self.wheelControlObj.drive_wheels(lw, rw)
 
             """
