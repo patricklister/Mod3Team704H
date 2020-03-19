@@ -84,6 +84,9 @@ class Rover:
 
         self.turnErrorThreshhold = 0.01
 
+        self.finalCoords = [0, 0]
+        self.startCoords = [0, 0]
+
     def face_goal(self):
         deltaX = self.destCoor[0] - self.locationHeadingObj.x
         deltaY = self.destCoor[1] - self.locationHeadingObj.y
@@ -148,7 +151,7 @@ class Rover:
 
 
     def go_straight_dist (self, distance, forOrBack):
-        initCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
+        """initCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
 
         distanceTravelled = 0
 
@@ -183,7 +186,28 @@ class Rover:
         newCoor = [self.locationHeadingObj.x, self.locationHeadingObj.y]
         distanceTravelled = ((newCoor[0]-initCoor[0])**2 + (newCoor[1]-initCoor[1])**2)**(0.5)
 
-        print(distanceTravelled)
+        print(distanceTravelled)"""
+
+        self.startCoords = [self.locationHeadingObj.x, self.locationHeadingObj.y]
+        self.finalCoords = [startCoords[0] + Mathf.sin(self.locationHeadingObj.heading), startCoords[1] + Mathf.cos(self.locationHeadingObj.heading)]
+
+        arrived = False
+
+        while not arrived and not rospy.is_shutdown()
+            if forOrBack == "f":
+                    velocity = speed
+                elif forOrBack == "b":
+                    velocity = (-1)*speed
+
+            self.wheelControlObj.drive_wheels(velocity, velocity)
+
+            if (Mathf.abs(self.locationHeadingObj.x) > Mathf.abs(finalCoords[0]) and Mathf.abs(self.locationHeadingObj.y) > Mathf.abs(finalCoords[1])):
+                arrived = True
+        
+        self.wheelControlObj.drive_wheels(0,0)
+
+        self.startCoords = [0, 0]
+        self.finalCoords = [0, 0]
 
 
 
