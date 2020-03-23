@@ -193,11 +193,11 @@ class Rover:
 
         arrived = False
 
-        while not arrived and not rospy.is_shutdown()
+        while not arrived and not rospy.is_shutdown():
             if forOrBack == "f":
                     velocity = speed
-                elif forOrBack == "b":
-                    velocity = (-1)*speed
+            elif forOrBack == "b":
+                velocity = (-1)*speed
 
             self.wheelControlObj.drive_wheels(velocity, velocity)
 
